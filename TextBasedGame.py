@@ -17,7 +17,7 @@ class Item:
         self.description = description
         self.attackBonus = 0
         self.defenseBonus = 0
-        
+
 #create items Here
 kitchenKnife = Item(Fore.CYAN + Style.DIM + "kitchen knife",
                     Fore.CYAN + Style.DIM + "\n---A Kitchen Knife---\n" + Fore.WHITE + Style.BRIGHT + "\tIt's a kitchen knife, good for cutting and good for stabbing.\n")
@@ -91,7 +91,7 @@ class Room:
         self.inventory = []
 
 
-#create rooms here       
+#create rooms here
 livingRoom = Room(Fore.RED + Style.BRIGHT + "\n---The Living Room---",
                   Style.BRIGHT + "\tThis is the living room.  It looks much like any other living room. There is couch and a few armchairs.  Oooh, the coffe table is nice!  It'd be a shame is someone were to stain it with some blood.\n" + Fore.GREEN + Style.BRIGHT + "Exits: North, East, West\n")
 
@@ -144,12 +144,12 @@ masterBedroom.inventory = [oldPants]
 #MAIN HERE
 def main():
 
-#move command to switch between rooms   
+#move command to switch between rooms
     def move(direction):
         global currentRoom
 
         exitsDict = {"north":currentRoom.north, "east":currentRoom.east, "south":currentRoom.south, "west":currentRoom.west}
-        
+
         if direction in exitsDict and exitsDict[direction] != 0:
             currentRoom = exitsDict[direction]
             checkRoom()
@@ -159,7 +159,7 @@ def main():
 #used to translate dict value to class object instance
     def translateObject(translateThis):
         global nextObject
-        
+
         if translateThis == ['bob']:
             nextObject = bob
         elif translateThis == ['ghost']:
@@ -173,10 +173,10 @@ def main():
         elif translateThis == ['note']:
             nextObject = note
         elif translateThis == ['pants']:
-            nextObject = oldPants      
+            nextObject = oldPants
 
 #the look command will return descriptions of the object looked at (or the room if no object specified)
-    def look(atObject = 0):   
+    def look(atObject = 0):
         if atObject == 0:
             checkRoom()
         elif atObject in currentRoom.creatures or atObject in currentRoom.inventory:
@@ -194,7 +194,7 @@ def main():
             heroInventory.remove(item)
             currentRoom.inventory.append(item)
             print("\nYou dropped it.\n")
-            
+
 #The get command
     def get(item):
         if item not in currentRoom.inventory:
@@ -203,12 +203,12 @@ def main():
             currentRoom.inventory.remove(item)
             heroInventory.append(item)
             print("\nYou got it.\n")
-            
+
 #the wear command
     def wear(item):
         global wearingAnything
         global heroDefense
-        
+
         if item not in heroInventory:
             print("\nYou don't have that item.\n")
         elif wearingAnything == True:
@@ -218,12 +218,12 @@ def main():
             heroDefense = heroDefense + item.defenseBonus
             item.name = item.name + " (wearing)"
             print("\nYou wore it.\n")
-            
+
 #the remove command
     def remove(item):
         global wearingAnything
         global heroDefense
-        
+
         if item not in heroInventory:
             print("\nYou don't have that item.\n")
         elif wearingAnything == False:
@@ -238,7 +238,7 @@ def main():
     def wield(weapon):
         global wieldingAnything
         global heroAttack
-        
+
         if weapon not in heroInventory:
             print("\nYou don't have that item.\n")
         elif wieldingAnything == True:
@@ -247,13 +247,13 @@ def main():
             wieldingAnything = True
             heroAttack = heroAttack + weapon.attackBonus
             weapon.name = weapon.name + " (wielding)"
-            print("\nYou wielded it.\n")       
+            print("\nYou wielded it.\n")
 
 #the unwield command
     def unwield(weapon):
         global wieldingAnything
         global heroAttack
-        
+
         if weapon not in heroInventory:
             print("\nYou don't have that item.\n")
         elif wieldingAnything == False:
@@ -275,7 +275,7 @@ def main():
                     for item in currentRoom.inventory:
                         print(Fore.WHITE + Style.BRIGHT + "A " + item.name + Fore.WHITE + Style.BRIGHT + " is here.")
 
-#combat system HERE                        
+#combat system HERE
     def kill(creature):
         global heroHp
         global heroExperience
@@ -283,7 +283,7 @@ def main():
         global heroDefense
         global heroLevel
         global still_alive
-        
+
         translateObject(creature)
         while True:
             heroHit = random.randint(0,6) + heroAttack
@@ -294,8 +294,8 @@ def main():
             enemyDamageTaken = heroHit - nextObject.defense
             if enemyDamageTaken < 0:
                 enemyDamageTaken = 0
-            
-            print(Fore.WHITE + Style.BRIGHT + "\nYou deal " + Fore.MAGENTA + Style.BRIGHT + str(enemyDamageTaken) + Fore.WHITE + Style.BRIGHT + " damage to " + str(nextObject.name) + "!\n")    
+
+            print(Fore.WHITE + Style.BRIGHT + "\nYou deal " + Fore.MAGENTA + Style.BRIGHT + str(enemyDamageTaken) + Fore.WHITE + Style.BRIGHT + " damage to " + str(nextObject.name) + "!\n")
             nextObject.hp = nextObject.hp - enemyDamageTaken
             if nextObject.hp <= 0:
                 print(Fore.WHITE + Style.BRIGHT + "\nYou killed " + str(nextObject.name) + "!\n")
@@ -305,11 +305,18 @@ def main():
                 gonnaRespawn.start()
                 #add items drop function and call
                 while heroExperience >= 100:
-                    heroAttack += 5
-                    heroDefense += 2
-                    heroHp += 10
+                    newAttack = random.randint(2,5)
+                    heroAttack += newAttack
+                    newDefense = random.randint(1,3)
+                    heroDefense += newDefense
+                    newHp = random.randint(7,12)
+                    heroHp += newHp
                     heroExperience -= 100
                     heroLevel += 1
+                    print(Fore.YELLOW + Style.BRIGHT + "You leveled up! " + Fore.WHITE + Style.BRIGHT + "You are now level: " + Fore.GREEN + Style.BRIGHT + str(heroLevel) +
+                        Fore.WHITE + Style.BRIGHT + "\n\tAttack +" + Fore.MAGENTA + Style.BRIGHT + str(newAttack) +
+                        Fore.WHITE + Style.BRIGHT + "\n\tDefense +" + Fore.MAGENTA + Style.BRIGHT + str(newDefense) +
+                        Fore.WHITE + Style.BRIGHT + "\n\tHit Points +" + Fore.MAGENTA + Style.BRIGHT + str(newHp) + "\n")
                 break
             print(str(nextObject.name) + Fore.WHITE + Style.BRIGHT + " deals " + Fore.MAGENTA + Style.BRIGHT + str(heroDamageTaken) + Fore.WHITE + Style.BRIGHT + " damage to you!\n")
             heroHp = heroHp - heroDamageTaken
@@ -327,14 +334,14 @@ def main():
         global currentRoom
         who = nextObject
         where = currentRoom
-        
+
         time.sleep(20)
         where.creatures.append(who)
-        
+
 #Rest command
     def rest():
         global heroHp
-        
+
         print(Fore.WHITE + Style.BRIGHT + "\nYou are resting...")
         time.sleep(2)
         print(Fore.WHITE + Style.BRIGHT + "\n...")
@@ -346,7 +353,7 @@ def main():
         #add a max to hp
 
 #help command list commands
-    helpCommand = (Fore.YELLOW + Style.BRIGHT + "\nTry typing in one of the following commands\n\n" 
+    helpCommand = (Fore.YELLOW + Style.BRIGHT + "\nTry typing in one of the following commands\n\n"
     + Fore.MAGENTA + Style.BRIGHT + "north, south, east, west " + Fore.WHITE + Style.BRIGHT + "- move to adjacent room\n"
     + Fore.MAGENTA + Style.BRIGHT + "look " + Fore.WHITE + Style.BRIGHT + "- look at current room\n"
     + Fore.MAGENTA + Style.BRIGHT + "look <creature> " + Fore.WHITE + Style.BRIGHT + "- look at a creature\n"
@@ -362,7 +369,7 @@ def main():
     + Fore.MAGENTA + Style.BRIGHT + "kill <creature> " + Fore.WHITE + Style.BRIGHT + "- fight a creature\n"
     + Fore.MAGENTA + Style.BRIGHT + "rest " + Fore.WHITE + Style.BRIGHT + "- rest and regenerate hp\n"
     + Fore.MAGENTA + Style.BRIGHT + "quit " + Fore.WHITE + Style.BRIGHT + "- leave the game\n")
-    
+
 
 ###CURRENT ROOM INITIATED HERE
     global currentRoom
@@ -382,27 +389,27 @@ def main():
     heroInventory = [note]
     global wearingAnything
     wearingAnything = False
-    global wieldingAnything 
+    global wieldingAnything
     wieldingAnything = False
     global heroLevel
     heroLevel = 1
-        
-#alive loop and commands    
+
+#alive loop and commands
     global still_alive
     still_alive = True
     while still_alive == True:
-            
+
 #what do prompt
         userInput = input(Fore.YELLOW + Style.BRIGHT + "Hero:" + Fore.BLUE + " HP " + Fore.WHITE + str(heroHp) + Fore.BLUE +
                            " Exp " + Fore.WHITE + str(heroExperience) + Fore.BLUE + ">> " + Fore.WHITE).lower()
-        userInputList = userInput.split(" ")     
+        userInputList = userInput.split(" ")
         nextCommand = userInputList[0]
         global nextObject
         nextObject = ""
-        if len(userInputList) > 1: 
+        if len(userInputList) > 1:
             translateMe = userInputList[1:]
             translateObject(translateMe)
-        
+
         if nextCommand == 'north':
             move(nextCommand)
         elif nextCommand == 'east':
@@ -459,3 +466,4 @@ def main():
 
 
 if __name__ == "__main__": main()
+
