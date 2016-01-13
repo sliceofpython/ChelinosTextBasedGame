@@ -357,7 +357,6 @@ def main():
             #add a max to hp
         else:
             print(Fore.WHITE + Style.BRIGHT + "\nYou are at full HP.")
-        #add "rest until hero is at max hp".
 
 #help command list commands
     helpCommand = (Fore.YELLOW + Style.BRIGHT + "\nTry typing in one of the following commands\n\n"
